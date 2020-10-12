@@ -20,8 +20,14 @@ jobs:
                   ./bin/golangci-lint run
               env:
                   GOPATH: /home/runner/work/gocity/go
-            - name: Test
+            - name: Test and generate coverage report
               run: |
-                  go test -race -cover ./...
+                  go test -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
               env:
                   GOPATH: /home/runner/work/gocity/go
+            - name: Upload coverage report
+              uses: codecov/codecov-action@v1.0.13
+              with:
+                file: ./coverage.txt
+                flags: unittests
+                name: codecov-umbrella
